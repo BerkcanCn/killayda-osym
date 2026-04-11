@@ -1,0 +1,126 @@
+.login-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  padding: 20px;
+}
+
+.login-bg-particles {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+}
+
+.particle {
+  position: absolute;
+  left: var(--x);
+  bottom: -10px;
+  width: var(--size);
+  height: var(--size);
+  background: var(--accent-purple);
+  border-radius: 50%;
+  opacity: 0.4;
+  animation: floatUp var(--duration) var(--delay) ease-in infinite;
+}
+
+@keyframes floatUp {
+  0% { transform: translateY(0) scale(1); opacity: 0.4; }
+  100% { transform: translateY(-100vh) scale(0.5); opacity: 0; }
+}
+
+.login-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+  width: 100%;
+  max-width: 440px;
+}
+
+.login-brand {
+  text-align: center;
+}
+
+.brand-icon {
+  width: 70px;
+  height: 70px;
+  margin: 0 auto 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36px;
+  background: rgba(139, 92, 246, 0.15);
+  border: 2px solid var(--border-glow);
+  border-radius: 16px;
+}
+
+.login-brand h1 {
+  font-size: 2rem;
+  margin-bottom: 6px;
+}
+
+.brand-tagline {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  color: var(--text-secondary);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.login-card {
+  width: 100%;
+  padding: 32px;
+}
+
+.login-card-header {
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.login-card-header h2 {
+  font-size: 1.2rem;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+}
+
+.login-card-header p {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.login-error {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 0.85rem;
+  color: #f87171;
+  margin-bottom: 4px;
+}
+
+.login-btn {
+  width: 100%;
+  margin-top: 8px;
+  padding: 14px;
+  font-size: 0.9rem;
+}
+
+.login-footer {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.login-hint {
+  font-family: var(--font-ui);
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}

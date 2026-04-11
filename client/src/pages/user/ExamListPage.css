@@ -1,0 +1,86 @@
+.examlist-page { padding: 40px 20px; align-items: flex-start; }
+
+.examlist-container {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.examlist-header {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.examlist-greeting {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 4px;
+}
+
+.greeting-wave { font-size: 1.8rem; }
+.greeting-sub { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 2px; }
+.greeting-name {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  color: var(--accent-cyan-bright);
+  letter-spacing: 0.05em;
+}
+
+.exams-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.exam-card {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 24px;
+  transition: all 0.3s;
+}
+
+.exam-card:hover {
+  transform: translateX(4px);
+}
+
+.exam-card-icon {
+  font-size: 2rem;
+  flex-shrink: 0;
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(139, 92, 246, 0.1);
+  border-radius: 12px;
+}
+
+.exam-card-body {
+  flex: 1;
+}
+.exam-card-body h3 {
+  font-size: 1.1rem;
+  margin-bottom: 4px;
+}
+.exam-card-body p {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.exam-start-btn { flex-shrink: 0; }
+
+.no-exams {
+  text-align: center;
+  padding: 60px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  color: var(--text-secondary);
+}
