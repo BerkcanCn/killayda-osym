@@ -114,6 +114,47 @@
   font-size: 0.9rem;
 }
 
+/* Kick ile giriş butonu — Kick marka yeşili */
+.kick-login-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: #53fc18;
+  color: #000;
+  font-weight: 700;
+  border: none;
+}
+
+.kick-login-btn:hover:not(:disabled) {
+  background: #47e00f;
+  box-shadow: 0 0 20px rgba(83, 252, 24, 0.4);
+}
+
+.kick-login-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.guest-toggle {
+  text-align: center;
+  margin-top: 14px;
+}
+
+.guest-link {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  cursor: pointer;
+  text-decoration: underline;
+  font-family: var(--font-ui);
+}
+
+.guest-link:hover {
+  color: var(--text-secondary);
+}
+
 .login-footer {
   margin-top: 20px;
   text-align: center;

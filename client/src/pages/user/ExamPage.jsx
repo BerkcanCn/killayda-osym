@@ -47,9 +47,8 @@ export default function ExamPage() {
       const res = await fetch(`/api/exams/${examId}`);
       if (!res.ok) throw new Error('Sınav bulunamadı');
       const data = await res.json();
-      setExam(data);
 
-      // Start session
+      // Start session — server bu oturuma özel rastgele soru seçip döndürür
       const sessionRes = await fetch('/api/sessions/start', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -57,13 +56,16 @@ export default function ExamPage() {
           username,
           examId,
           examTitle: data.title,
-          totalQuestions: data.questions?.length || 0,
         }),
       });
       const sessionData = await sessionRes.json();
       const sid = sessionData.sessionId;
       setSessionId(sid);
       sessionIdRef.current = sid;
+
+      // Sınavı, bu oturum için seçilen rastgele soru alt kümesiyle göster
+      const sessionQuestions = sessionData.questions || data.questions || [];
+      setExam({ ...data, questions: sessionQuestions });
 
       // Join socket room
       socket.emit('user:join', {
@@ -72,7 +74,7 @@ export default function ExamPage() {
         examId,
         examTitle: data.title,
         currentQuestion: 1,
-        totalQuestions: data.questions?.length || 0,
+        totalQuestions: sessionQuestions.length,
       });
 
       // Start timer

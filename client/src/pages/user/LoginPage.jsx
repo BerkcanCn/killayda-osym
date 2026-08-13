@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { KICK_CLIENT_ID, buildAuthorizeUrl } from '../../lib/kickAuth';
+import { randomString, sha256Challenge } from '../../lib/pkce';
 import './LoginPage.css';
 
 const KILLAYDA_LOGO = `⚡`;
@@ -8,15 +10,34 @@ export default function LoginPage() {
   const [username, setUsername] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [showGuest, setShowGuest] = useState(false);
   const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const trimmed = username.trim();
-    if (!trimmed) {
-      setError('Kullanıcı adı boş bırakılamaz!');
+  // Kick OAuth 2.1 + PKCE akışını başlatır
+  const handleKickLogin = async () => {
+    if (!KICK_CLIENT_ID) {
+      setError('Kick Client ID tanımlı değil (client/.env → VITE_KICK_CLIENT_ID).');
       return;
     }
+    setLoading(true);
+    setError('');
+
+    const codeVerifier = randomString(64);
+    const codeChallenge = await sha256Challenge(codeVerifier);
+    const state = randomString(32);
+
+    // PKCE verifier ve state'i callback'te doğrulamak için sakla
+    sessionStorage.setItem('kick_pkce_verifier', codeVerifier);
+    sessionStorage.setItem('kick_oauth_state', state);
+
+    // Kick yetkilendirme sayfasına yönlendir
+    window.location.href = buildAuthorizeUrl({ state, codeChallenge });
+  };
+
+  // Geliştirme/test için Kick olmadan giriş
+  const handleGuestSubmit = async (e) => {
+    e.preventDefault();
+    const trimmed = username.trim();
     if (trimmed.length < 2) {
       setError('Kullanıcı adı en az 2 karakter olmalı!');
       return;
@@ -24,13 +45,8 @@ export default function LoginPage() {
 
     setLoading(true);
     setError('');
-
-    // Store username in session
     sessionStorage.setItem('username', trimmed);
-
-    // Brief loading for effect
-    await new Promise((r) => setTimeout(r, 800));
-
+    await new Promise((r) => setTimeout(r, 400));
     setLoading(false);
     navigate('/exams');
   };
@@ -60,46 +76,69 @@ export default function LoginPage() {
         <div className="login-card card">
           <div className="login-card-header">
             <h2>Sınava Giriş</h2>
-            <p>Twitch veya Discord kullanıcı adını gir</p>
+            <p>Devam etmek için Kick hesabınla giriş yap</p>
           </div>
 
-          <form onSubmit={handleSubmit} className="login-form">
-            <div className="form-group">
-              <label htmlFor="username">KULLANICI ADI</label>
-              <input
-                id="username"
-                className="form-input"
-                type="text"
-                placeholder="örn: KemikFanatic99"
-                value={username}
-                onChange={(e) => { setUsername(e.target.value); setError(''); }}
-                autoComplete="off"
-                spellCheck={false}
-                maxLength={32}
-              />
+          {error && (
+            <div className="login-error" style={{ marginBottom: 16 }}>
+              ⚠ {error}
             </div>
+          )}
 
-            {error && (
-              <div className="login-error">
-                ⚠ {error}
-              </div>
+          {/* Kick ile giriş — ana yöntem */}
+          <button
+            type="button"
+            className="btn login-btn kick-login-btn"
+            onClick={handleKickLogin}
+            disabled={loading}
+          >
+            {loading ? (
+              <>
+                <span className="spinner" style={{ width: 18, height: 18, borderWidth: 2 }} />
+                Yönlendiriliyor...
+              </>
+            ) : (
+              <>
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <path d="M3 3h5v5h2V6h2V4h2V3h5v6h-2v2h-2v2h2v2h2v6h-5v-1h-2v-2h-2v-2H8v5H3V3z" />
+                </svg>
+                Kick ile Giriş Yap
+              </>
             )}
+          </button>
 
-            <button
-              type="submit"
-              className="btn btn-primary login-btn"
-              disabled={loading || !username.trim()}
-            >
-              {loading ? (
-                <>
-                  <span className="spinner" style={{ width: 18, height: 18, borderWidth: 2 }} />
-                  Giriş yapılıyor...
-                </>
-              ) : (
-                <>🎮 Sınavlara Git</>
-              )}
+          {/* Geliştirme/test için misafir girişi */}
+          <div className="guest-toggle">
+            <button type="button" className="guest-link" onClick={() => setShowGuest((v) => !v)}>
+              {showGuest ? 'Gizle' : 'Misafir olarak devam et (test)'}
             </button>
-          </form>
+          </div>
+
+          {showGuest && (
+            <form onSubmit={handleGuestSubmit} className="login-form">
+              <div className="form-group">
+                <label htmlFor="username">KULLANICI ADI</label>
+                <input
+                  id="username"
+                  className="form-input"
+                  type="text"
+                  placeholder="örn: KemikFanatic99"
+                  value={username}
+                  onChange={(e) => { setUsername(e.target.value); setError(''); }}
+                  autoComplete="off"
+                  spellCheck={false}
+                  maxLength={32}
+                />
+              </div>
+              <button
+                type="submit"
+                className="btn btn-secondary login-btn"
+                disabled={loading || !username.trim()}
+              >
+                🎮 Misafir Girişi
+              </button>
+            </form>
+          )}
 
           <div className="login-footer">
             <span className="badge badge-purple">KemikKadro Only 💀</span>

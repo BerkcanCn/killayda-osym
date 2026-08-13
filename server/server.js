@@ -37,10 +37,12 @@ app.set('liveUsers', liveUsers);
 const examsRouter = require('./routes/exams');
 const sessionsRouter = require('./routes/sessions');
 const resultsRouter = require('./routes/results');
+const authRouter = require('./routes/auth');
 
 app.use('/api/exams', examsRouter);
 app.use('/api/sessions', sessionsRouter);
 app.use('/api/results', resultsRouter);
+app.use('/api/auth', authRouter);
 
 // Admin auth endpoint
 app.post('/api/admin/login', (req, res) => {

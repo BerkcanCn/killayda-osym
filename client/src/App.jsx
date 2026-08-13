@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import LoginPage from './pages/user/LoginPage';
+import KickCallback from './pages/user/KickCallback';
 import ExamListPage from './pages/user/ExamListPage';
 import ExamPage from './pages/user/ExamPage';
 import ResultPage from './pages/user/ResultPage';
@@ -17,6 +18,7 @@ function App() {
       <Routes>
         {/* User routes */}
         <Route path="/" element={<LoginPage />} />
+        <Route path="/auth/kick/callback" element={<KickCallback />} />
         <Route path="/exams" element={<ExamListPage />} />
         <Route path="/exam/:id" element={<ExamPage />} />
         <Route path="/result" element={<ResultPage />} />
